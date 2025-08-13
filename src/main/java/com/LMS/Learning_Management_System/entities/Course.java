@@ -14,22 +14,26 @@ import jakarta.persistence.OneToMany;
 public class Course {
 	
 	@Id
-	private int c_id;
+	private int cid;
 	private String c_name;
 	
 	@OneToMany(mappedBy = "course")
 	private List<Enrollments> enrollments;
 	
-	@ManyToOne
-	@JoinColumn(name="course_faculty")
-	private Instructor instructor;
 
-	public int getC_id() {
-		return c_id;
+    @ManyToMany(mappedBy = "courses") 
+    private List<Instructor> instructors;
+
+	
+
+	
+
+	public int getCid() {
+		return cid;
 	}
 
-	public void setC_id(int c_id) {
-		this.c_id = c_id;
+	public void setCid(int cid) {
+		this.cid = cid;
 	}
 
 	public String getC_name() {
@@ -48,12 +52,13 @@ public class Course {
 		this.enrollments = enrollments;
 	}
 
-	public Instructor getInstructor() {
-		return instructor;
+
+	public List<Instructor> getInstructors() {
+		return instructors;
 	}
 
-	public void setInstructor(Instructor instructor) {
-		this.instructor = instructor;
+	public void setInstructors(List<Instructor> instructors) {
+		this.instructors = instructors;
 	}
 
 	public Course() {
@@ -63,7 +68,7 @@ public class Course {
 
 	@Override
 	public String toString() {
-		return "Course [c_id=" + c_id + ", c_name=" + c_name + "]";
+		return "Course [c_id=" + cid + ", c_name=" + c_name + "]";
 	}
 
 	

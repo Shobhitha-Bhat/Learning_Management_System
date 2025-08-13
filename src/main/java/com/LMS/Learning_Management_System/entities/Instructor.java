@@ -18,13 +18,11 @@ public class Instructor {
 	private String F_name;
 	private String dept;
 	
-
-	
 	@ManyToMany
     @JoinTable(
         name = "instructor_course",
         joinColumns = @JoinColumn(name = "F_id"),
-        inverseJoinColumns = @JoinColumn(name = "c_id")
+        inverseJoinColumns = @JoinColumn(name = "cid")
     )
 	private List<Course> courses;
 	
