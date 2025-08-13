@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 
 @Entity
@@ -16,8 +17,8 @@ public class Course {
 	private int c_id;
 	private String c_name;
 	
-	@ManyToMany(mappedBy = "courses")
-	private List<Student> students;
+	@OneToMany(mappedBy = "course")
+	private List<Enrollments> enrollments;
 	
 	@ManyToOne
 	@JoinColumn(name="course_faculty")
@@ -39,12 +40,12 @@ public class Course {
 		this.c_name = c_name;
 	}
 
-	public List<Student> getStudents() {
-		return students;
+	public List<Enrollments> getEnrollments() {
+		return enrollments;
 	}
 
-	public void setStudents(List<Student> students) {
-		this.students = students;
+	public void setEnrollments(List<Enrollments> enrollments) {
+		this.enrollments = enrollments;
 	}
 
 	public Instructor getInstructor() {
@@ -55,16 +56,16 @@ public class Course {
 		this.instructor = instructor;
 	}
 
-	@Override
-	public String toString() {
-		return "Course [c_id=" + c_id + ", c_name=" + c_name + ", students=" + students + "]";
-	}
-
 	public Course() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Course [c_id=" + c_id + ", c_name=" + c_name + "]";
+	}
+
 	
 	
 

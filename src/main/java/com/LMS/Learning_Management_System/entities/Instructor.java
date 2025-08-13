@@ -2,10 +2,13 @@ package com.LMS.Learning_Management_System.entities;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+
+import jakarta.persistence.JoinColumn;
 
 @Entity
 public class Instructor {
@@ -15,9 +18,16 @@ public class Instructor {
 	private String F_name;
 	private String dept;
 	
-	@OneToMany(mappedBy = "instructor" ,  cascade = CascadeType.ALL)
-	private List<Course> courses;
 
+	
+	@ManyToMany
+    @JoinTable(
+        name = "instructor_course",
+        joinColumns = @JoinColumn(name = "F_id"),
+        inverseJoinColumns = @JoinColumn(name = "c_id")
+    )
+	private List<Course> courses;
+	
 	public String getF_id() {
 		return F_id;
 	}
