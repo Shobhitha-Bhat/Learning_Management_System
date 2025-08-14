@@ -14,6 +14,7 @@ public class Student {
 	@Id
 	private String USN;
 	private String S_name;
+	private int semester;
 	private String dept;
 	
 	@OneToMany(mappedBy = "student")
@@ -25,6 +26,14 @@ public class Student {
 
 	public void setUSN(String uSN) {
 		USN = uSN;
+	}
+
+	public int getSemester() {
+		return semester;
+	}
+
+	public void setSemester(int semester) {
+		this.semester = semester;
 	}
 
 	public String getS_name() {
@@ -58,8 +67,14 @@ public class Student {
 
 	@Override
 	public String toString() {
-		return "Student [USN=" + USN + ", S_name=" + S_name + ", dept=" + dept + "]";
+		return "Student Details:\n"
+				+ " [USN=" + USN + ", "
+						+ "S_name=" + S_name + ", "
+								+ "semester=" + semester + ", "
+										+ "dept=" + dept + "]";
 	}
+
+	
 
 	
 }
