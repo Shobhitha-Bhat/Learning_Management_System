@@ -1,5 +1,6 @@
 package com.LMS.Learning_Management_System.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.LMS.Learning_Management_System.DAO.CourseRepo;
+import com.LMS.Learning_Management_System.DAO.InstructorRepo;
 import com.LMS.Learning_Management_System.entities.Course;
 import com.LMS.Learning_Management_System.entities.Instructor;
 
@@ -15,6 +17,8 @@ public class CourseService {
 	
 	@Autowired
 	private CourseRepo crepo;
+	@Autowired
+	private InstructorRepo irepo;
 	
 	//add course
 	public Course addCourse(Course c) {
@@ -41,5 +45,23 @@ public class CourseService {
 	public List<Instructor> getInstructors(int c_id){
 		Course c = getCourseById(c_id);
 		return c.getInstructors();
+	}
+	
+	//add a new courseInstructor
+	public void addNewCourseInst(String fId,int c_id) {
+		Course c = getCourseById(c_id);
+		Optional<Instructor> op=irepo.findById(fId);
+		Instructor ins=op.get();
+		
+		List<Instructor> inst = c.getInstructors();
+		inst.add(ins);
+		c.setInstructors(inst);
+		
+		List<Course> cs=ins.getCourses();
+		cs.add(c);
+		ins.setCourses(cs);
+		
+		crepo.save(c);
+		irepo.save(ins);
 	}
 }
