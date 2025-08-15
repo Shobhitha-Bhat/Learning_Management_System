@@ -2,11 +2,12 @@ package com.LMS.Learning_Management_System.entities;
 
 import java.util.List;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+
 import jakarta.persistence.OneToMany;
 
 
@@ -21,12 +22,8 @@ public class Course {
 	private List<Enrollments> enrollments;
 	
 
-    @ManyToMany(mappedBy = "courses") 
+    @ManyToMany(mappedBy = "courses")
     private List<Instructor> instructors;
-
-	
-
-	
 
 	public int getCid() {
 		return cid;

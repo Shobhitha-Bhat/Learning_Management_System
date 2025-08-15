@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.LMS.Learning_Management_System.DTO.CourseFacultyList;
 import com.LMS.Learning_Management_System.entities.Course;
 import com.LMS.Learning_Management_System.entities.Instructor;
 import com.LMS.Learning_Management_System.service.CourseService;
@@ -36,11 +37,11 @@ public class CourseController {
 	}
 	
 	@GetMapping("/coursefacultylist/{c_id}")
-		public List<Instructor> getCourseInstructors(@PathVariable ("c_id") int cId){
+		public CourseFacultyList getCourseInstructors(@PathVariable ("c_id") int cId){
 			return cservice.getInstructors(cId);
 		}
 	
-	@PutMapping("/course{c_id}/addInstructor{f_id}")
+	@PutMapping("/course/{c_id}/addInstructor/{f_id}")
 	public void addNewCourseInstructor(@PathVariable ("c_id") int cid,@PathVariable ("f_id") String fId) {
 		cservice.addNewCourseInst(fId, cid);
 	}

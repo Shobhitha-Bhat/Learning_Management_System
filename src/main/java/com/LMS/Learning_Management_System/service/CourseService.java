@@ -3,12 +3,15 @@ package com.LMS.Learning_Management_System.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.LMS.Learning_Management_System.DAO.CourseRepo;
 import com.LMS.Learning_Management_System.DAO.InstructorRepo;
+import com.LMS.Learning_Management_System.DTO.CourseFacultyList;
+import com.LMS.Learning_Management_System.DTO.InstructorResponseEntity;
 import com.LMS.Learning_Management_System.entities.Course;
 import com.LMS.Learning_Management_System.entities.Instructor;
 
@@ -42,9 +45,13 @@ public class CourseService {
 	}
 	
 	//get the course handling faculty list
-	public List<Instructor> getInstructors(int c_id){
+	public CourseFacultyList getInstructors(int c_id){
 		Course c = getCourseById(c_id);
-		return c.getInstructors();
+		List<InstructorResponseEntity> list = c.getInstructors()
+				.stream()
+				.map(i -> new InstructorResponseEntity(i.getFid(),i.getFname(),i.getDept()))
+				.collect(Collectors.toList());
+		return new CourseFacultyList(c.getCid(),c.getC_name(),list);
 	}
 	
 	//add a new courseInstructor

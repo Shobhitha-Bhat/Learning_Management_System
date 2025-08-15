@@ -2,12 +2,15 @@ package com.LMS.Learning_Management_System.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.LMS.Learning_Management_System.DAO.CourseRepo;
 import com.LMS.Learning_Management_System.DAO.InstructorRepo;
+import com.LMS.Learning_Management_System.DTO.CourseResponseEntity;
+import com.LMS.Learning_Management_System.DTO.FacultyCourseList;
 import com.LMS.Learning_Management_System.entities.Course;
 import com.LMS.Learning_Management_System.entities.Instructor;
 
@@ -39,9 +42,14 @@ public class InstructorService {
 		
 		
 		//get the faculty handling courses list
-		public List<Course> getFacultyCourses(String fid){
+		public FacultyCourseList getFacultyCourses(String fid){
 			Instructor ins=getInsById(fid);
-			return ins.getCourses();
+			List<CourseResponseEntity> list = ins.getCourses()
+					.stream()
+					.map(i-> new CourseResponseEntity(i.getCid(),i.getC_name()))
+					.collect(Collectors.toList());
+			
+			return new FacultyCourseList(ins.getFid(),ins.getFname(),ins.getDept(),list);
 		}
 		
 		//add course to be handled by the faculty

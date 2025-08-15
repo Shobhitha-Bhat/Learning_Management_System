@@ -14,32 +14,33 @@ import jakarta.persistence.JoinColumn;
 public class Instructor {
 	
 	@Id
-	private String F_id;
-	private String F_name;
+	private String fid;
+	private String fname;
 	private String dept;
 	
 	@ManyToMany
     @JoinTable(
         name = "instructor_course",
-        joinColumns = @JoinColumn(name = "F_id"),
+        joinColumns = @JoinColumn(name = "fid"),
         inverseJoinColumns = @JoinColumn(name = "cid")
     )
 	private List<Course> courses;
 	
-	public String getF_id() {
-		return F_id;
+	
+	public String getFid() {
+		return fid;
 	}
 
-	public void setF_id(String f_id) {
-		F_id = f_id;
+	public void setFid(String fid) {
+		this.fid = fid;
 	}
 
-	public String getF_name() {
-		return F_name;
+	public String getFname() {
+		return fname;
 	}
 
-	public void setF_name(String f_name) {
-		F_name = f_name;
+	public void setFname(String fname) {
+		this.fname = fname;
 	}
 
 	public String getDept() {
@@ -60,7 +61,7 @@ public class Instructor {
 
 	@Override
 	public String toString() {
-		return "Instructor [F_id=" + F_id + ", F_name=" + F_name + ", dept=" + dept + "]";
+		return "Instructor [F_id=" + fid + ", F_name=" + fname + ", dept=" + dept + "]";
 	}
 
 	public Instructor() {
