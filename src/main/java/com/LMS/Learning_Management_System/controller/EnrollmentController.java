@@ -1,7 +1,5 @@
 package com.LMS.Learning_Management_System.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.LMS.Learning_Management_System.DTO.EnrollmentList;
 import com.LMS.Learning_Management_System.DTO.EnrollmentRequest;
 import com.LMS.Learning_Management_System.DTO.UpdateEnrollment;
-import com.LMS.Learning_Management_System.entities.Enrollments;
 import com.LMS.Learning_Management_System.service.EnrollmentService;
 
 @RestController

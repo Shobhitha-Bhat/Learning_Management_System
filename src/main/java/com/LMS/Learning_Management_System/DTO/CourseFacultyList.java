@@ -2,7 +2,6 @@ package com.LMS.Learning_Management_System.DTO;
 
 import java.util.List;
 
-import com.LMS.Learning_Management_System.entities.Instructor;
 
 public class CourseFacultyList {
 	private int cId;

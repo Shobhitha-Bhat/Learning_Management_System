@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.LMS.Learning_Management_System.DAO.EnrollmentRepo;
 import com.LMS.Learning_Management_System.DAO.StudentRepo;
 import com.LMS.Learning_Management_System.DTO.StudentEnrollments;
 import com.LMS.Learning_Management_System.DTO.UpdateStudent;
@@ -18,9 +17,7 @@ import com.LMS.Learning_Management_System.entities.Student;
 public class StudentService {
 	@Autowired
 	private StudentRepo strepo;
-	
-	@Autowired
-	private EnrollmentRepo enrepo;
+
 	
 	//add student
 	public Student addStudent(Student st) {

@@ -7,9 +7,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.LMS.Learning_Management_System.DAO.CourseRepo;
+
 import com.LMS.Learning_Management_System.DAO.EnrollmentRepo;
-import com.LMS.Learning_Management_System.DAO.StudentRepo;
 import com.LMS.Learning_Management_System.DTO.EnrollmentList;
 import com.LMS.Learning_Management_System.DTO.EnrollmentRequest;
 import com.LMS.Learning_Management_System.DTO.StudentEnrollResponseEntity;

@@ -2,7 +2,6 @@ package com.LMS.Learning_Management_System.entities;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
