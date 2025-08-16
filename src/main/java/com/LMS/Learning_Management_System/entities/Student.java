@@ -2,7 +2,7 @@ package com.LMS.Learning_Management_System.entities;
 
 import java.util.List;
 
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -12,21 +12,15 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Student {
 	@Id
-	private String USN;
-	private String S_name;
+	private String usn;
+	private String sName;
 	private int semester;
 	private String dept;
 	
-	@OneToMany(mappedBy = "student")
+	@OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Enrollments> enrollments;
 
-	public String getUSN() {
-		return USN;
-	}
-
-	public void setUSN(String uSN) {
-		USN = uSN;
-	}
+	
 
 	public int getSemester() {
 		return semester;
@@ -36,13 +30,7 @@ public class Student {
 		this.semester = semester;
 	}
 
-	public String getS_name() {
-		return S_name;
-	}
-
-	public void setS_name(String s_name) {
-		S_name = s_name;
-	}
+	
 
 	public String getDept() {
 		return dept;
@@ -68,10 +56,26 @@ public class Student {
 	@Override
 	public String toString() {
 		return "Student Details:\n"
-				+ " [USN=" + USN + ", "
-						+ "S_name=" + S_name + ", "
+				+ " [USN=" + usn + ", "
+						+ "S_name=" + sName + ", "
 								+ "semester=" + semester + ", "
 										+ "dept=" + dept + "]";
+	}
+
+	public String getsName() {
+		return sName;
+	}
+
+	public void setsName(String sName) {
+		this.sName = sName;
+	}
+
+	public String getUsn() {
+		return usn;
+	}
+
+	public void setUsn(String usn) {
+		this.usn = usn;
 	}
 
 	

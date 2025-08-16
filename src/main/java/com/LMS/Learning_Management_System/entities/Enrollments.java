@@ -13,7 +13,7 @@ public class Enrollments {
 	private EnrollmentId enr_id;
 	
 	@ManyToOne
-	@MapsId("USN")
+	@MapsId("usn")
 	@JoinColumn(name = "student_id")
 	private Student student;
 	

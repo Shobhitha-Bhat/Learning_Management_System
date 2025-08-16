@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.LMS.Learning_Management_System.DTO.EnrollmentList;
 import com.LMS.Learning_Management_System.DTO.EnrollmentRequest;
 import com.LMS.Learning_Management_System.DTO.UpdateEnrollment;
 import com.LMS.Learning_Management_System.entities.Enrollments;
@@ -23,26 +24,31 @@ public class EnrollmentController {
 	private EnrollmentService enservice;
 	
 	@GetMapping("/getenrollments/{c_id}")
-	public List<Enrollments> getAllEnrollments(@PathVariable ("c_id") int cId){
+	//handle empty course enrollments
+	public EnrollmentList getAllEnrollments(@PathVariable ("c_id") int cId){
 		return enservice.getAllStudentsInCourse(cId);
 	}
 	
 	@PostMapping("/addenrollment/{usn}/{cid}")
-	public Enrollments addEnrollment(@PathVariable ("usn")String USN, @PathVariable ("cid") int cId) {
-		return enservice.addStudentCourse(USN, cId);
+	//handle course and student notfound
+	public void addEnrollment(@PathVariable ("usn")String USN, @PathVariable ("cid") int cId) {
+		enservice.addStudentCourse(USN, cId);
 	}
 	
 	@PostMapping("/addenrollments")
+	//handle student not found and course not found
 	public void addManyEnrollments(@RequestBody EnrollmentRequest enreq ) {
 		enservice.addStudentsandTheirCourses(enreq);
 	}
 	
 	@PutMapping("/updateEnrollment")
+	//handle invalid usn and cid
 	public void updatEnrollment(@RequestBody UpdateEnrollment upen) {
 		enservice.modifyStudentMarks(upen);
 	}
 	
 	@DeleteMapping("/deleteEnrollment/{usn}/{c_id}")
+	//handle course and student valid deletions
 	public void deleteEnrollment(@PathVariable ("usn") String usn,@PathVariable ("c_id") int cId) {
 		enservice.deleteEnrollment(usn, cId);
 	}

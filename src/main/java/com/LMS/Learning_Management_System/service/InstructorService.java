@@ -1,5 +1,6 @@
 package com.LMS.Learning_Management_System.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,8 +37,14 @@ public class InstructorService {
 		}
 		
 		//get all faculty
-		public List<Instructor> getAllInstructors(){
-			return (List<Instructor>) instrepo.findAll();
+		public List<FacultyCourseList> getAllInstructors(){
+			List<Instructor> ins = (List<Instructor>) instrepo.findAll();
+			List<FacultyCourseList> fc=new ArrayList<>();
+			for(Instructor i:ins) {
+				fc.add(getFacultyCourses(i.getFid()));
+			}
+			return fc;
+			
 		}
 		
 		
@@ -69,6 +76,11 @@ public class InstructorService {
 			instrepo.save(ins);
 			crepo.save(c);
 			
+		}
+		
+		public void deleteInst(String fid) {
+			//automatically deletes entry from the instructor_course join table also.
+			instrepo.deleteById(fid);
 		}
 		
 		

@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.LMS.Learning_Management_System.DAO.CourseRepo;
+import com.LMS.Learning_Management_System.DAO.EnrollmentRepo;
 import com.LMS.Learning_Management_System.DAO.InstructorRepo;
 import com.LMS.Learning_Management_System.DTO.CourseFacultyList;
 import com.LMS.Learning_Management_System.DTO.InstructorResponseEntity;
 import com.LMS.Learning_Management_System.entities.Course;
 import com.LMS.Learning_Management_System.entities.Instructor;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class CourseService {
@@ -22,6 +25,8 @@ public class CourseService {
 	private CourseRepo crepo;
 	@Autowired
 	private InstructorRepo irepo;
+	@Autowired
+	private EnrollmentRepo enrepo;
 	
 	//add course
 	public Course addCourse(Course c) {
@@ -39,9 +44,13 @@ public class CourseService {
 	}
 	
 	//get all course with details
-	public List<Course> getAllCourses(){
+	public List<CourseFacultyList> getAllCourses(){
 		List<Course> allcourses = (List<Course>) crepo.findAll();
-		return allcourses;
+		List<CourseFacultyList> cf = new ArrayList<>();
+		for(Course c:allcourses) {
+			cf.add(getInstructors(c.getCid()));
+		}
+		return cf;
 	}
 	
 	//get the course handling faculty list
@@ -70,5 +79,20 @@ public class CourseService {
 		
 		crepo.save(c);
 		irepo.save(ins);
+	}
+	
+	@Transactional
+	public void deletecourse(int cid) {
+		//delete students who have enrolled into that particular course
+		enrepo.deleteAllByCourse_cid(cid);
+		Course c =getCourseById(cid);
+		//delete the course from the course list of faculty
+		for (Instructor i : c.getInstructors()) {
+	        i.getCourses().remove(c);
+	    }
+		//clear the faculty list of that particular course.....not needed..already deleted from the facultyside
+//	    c.getInstructors().clear();
+//		crepo.saveAndFlush(c);   //requires jparepo
+		crepo.deleteById(cid);
 	}
 }

@@ -9,26 +9,36 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class EnrollmentId implements Serializable{
 	
-	private String USN;
+	private String usn;
 	private int c_id;
 	
 	public EnrollmentId() {
 		
 	}
 
-	public EnrollmentId(String uSN, int c_id) {
-//		super();
-		USN = uSN;
+	
+
+	public EnrollmentId(String usn, int c_id) {
+		super();
+		this.usn = usn;
 		this.c_id = c_id;
 	}
 
-	public String getUSN() {
-		return USN;
+
+
+	
+
+	public String getUsn() {
+		return usn;
 	}
 
-	public void setUSN(String uSN) {
-		USN = uSN;
+
+
+	public void setUsn(String usn) {
+		this.usn = usn;
 	}
+
+
 
 	public int getC_id() {
 		return c_id;
@@ -40,7 +50,7 @@ public class EnrollmentId implements Serializable{
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(USN, c_id);
+		return Objects.hash(usn, c_id);
 	}
 
 	@Override
@@ -52,7 +62,7 @@ public class EnrollmentId implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		EnrollmentId other = (EnrollmentId) obj;
-		return Objects.equals(USN, other.USN) && c_id == other.c_id;
+		return Objects.equals(usn, other.usn) && c_id == other.c_id;
 	}
 	
 	

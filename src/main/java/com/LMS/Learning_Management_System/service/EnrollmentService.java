@@ -1,5 +1,6 @@
 package com.LMS.Learning_Management_System.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 import com.LMS.Learning_Management_System.DAO.CourseRepo;
 import com.LMS.Learning_Management_System.DAO.EnrollmentRepo;
 import com.LMS.Learning_Management_System.DAO.StudentRepo;
+import com.LMS.Learning_Management_System.DTO.EnrollmentList;
 import com.LMS.Learning_Management_System.DTO.EnrollmentRequest;
+import com.LMS.Learning_Management_System.DTO.StudentEnrollResponseEntity;
 import com.LMS.Learning_Management_System.DTO.UpdateEnrollment;
 import com.LMS.Learning_Management_System.entities.Course;
 import com.LMS.Learning_Management_System.entities.EnrollmentId;
@@ -27,38 +30,35 @@ public class EnrollmentService {
 	private CourseService cservice;
 	
 	//get all students enrolled in a particular course	
-	public List<Enrollments> getAllStudentsInCourse(int c_id){
+	public EnrollmentList getAllStudentsInCourse(int c_id){
 		List<Enrollments> enrolls = (List<Enrollments>) enrepo.findAllByCourse_cid(c_id);
-		return enrolls;
+		List<StudentEnrollResponseEntity> st = new ArrayList<>();
+		for(Enrollments en:enrolls) {
+			st.add(new StudentEnrollResponseEntity(en.getStudent().getUsn(), en.getStudent().getsName(), en.getMarks()));
+		}
+		return new EnrollmentList(c_id,st);
 	}
-	
-//	//get a particular student in a particular course
-//	public Student getStudentInCourse(String usn,int c_id) {
-//		Optional<Student> op=enrepo.findStudentInCourse(usn,c_id);
-//		Student s=op.get();
-//		return s;
-//	}
 
 	
-	
 	//add a student and their selected course(not a list)
-	
-	public Enrollments addStudentCourse(String usn,int c_id) {
+	public void addStudentCourse(String usn,int c_id) {
 		Student st = stservice.getStudentById(usn);
 		Course c = cservice.getCourseById(c_id);
 		
 		EnrollmentId newEnroll = new EnrollmentId(usn,c_id);
 		
 		Enrollments enroll = new Enrollments(newEnroll, st,c,0);
-		return enrepo.save(enroll);
+		enrepo.save(enroll);
+		st.getEnrollments().add(enroll);
+		stservice.updateStudent(st);
 		
 	}
 	
 
 	//add a student and their selected courses_list
 	public void addStudentsandTheirCourses(EnrollmentRequest enreq) {
-		String usn=enreq.getSt_USN();
-		List<Integer> course_ids = enreq.getCourse_ids();
+		String usn=enreq.getStUSN();
+		List<Integer> course_ids = enreq.getCourseIds();
 		Student st = stservice.getStudentById(usn);
 		for(Integer c_id:course_ids) {
 			
@@ -93,6 +93,11 @@ public class EnrollmentService {
 		EnrollmentId e_id=new EnrollmentId(usn,c_id);
 		enrepo.deleteById(e_id);
 	}
+	
+	
+//	public void deleteAStudentCourse(int cid) {
+//		enrepo.deleteAllByCourse_cid(cid);
+//	}
 	
 
 	
