@@ -84,6 +84,9 @@ public class CourseService {
 		Instructor ins=op.get();
 		
 		List<Instructor> inst = c.getInstructors();
+		if(inst.contains(ins)) {
+			throw new InvalidInstructorException("Course Already handled by the instructor.Try Again");
+		}
 		inst.add(ins);
 		c.setInstructors(inst);
 		List<Course> cs=ins.getCourses();

@@ -1,7 +1,7 @@
 package com.LMS.Learning_Management_System.entities;
 
 import java.util.List;
-
+import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -67,6 +67,19 @@ public class Instructor {
 	public Instructor() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(fid);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+	    if(!(o instanceof Instructor)) return false;
+	    Instructor other = (Instructor) o;
+	    return Objects.equals(fid, other.fid);
 	}
 	
 	
