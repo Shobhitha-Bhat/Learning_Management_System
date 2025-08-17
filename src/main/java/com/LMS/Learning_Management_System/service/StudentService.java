@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.LMS.Learning_Management_System.DAO.StudentRepo;
 import com.LMS.Learning_Management_System.DTO.StudentEnrollments;
 import com.LMS.Learning_Management_System.DTO.UpdateStudent;
+import com.LMS.Learning_Management_System.Exceptions.InvalidStudentException;
+import com.LMS.Learning_Management_System.Exceptions.StudentNotFoundException;
 import com.LMS.Learning_Management_System.entities.Enrollments;
 import com.LMS.Learning_Management_System.entities.Student;
 
@@ -21,26 +23,28 @@ public class StudentService {
 	
 	//add student
 	public Student addStudent(Student st) {
+		strepo.findById(st.getUsn()).
+			ifPresent(e->{
+			throw new InvalidStudentException("Student with USN "+st.getUsn()+" already exists.Try Again");
+			});
 		return strepo.save(st);
 	}
+
 	
-	//get student by id
-	
+	//get student by id	
 	public Student getStudentById(String usn) {
-		Optional<Student> op=strepo.findById(usn);
-		if(!op.isPresent()) {
-//			error
-		}
-		Student st=op.get();
-		return st;
+		return strepo.findById(usn).
+					orElseThrow(()->new StudentNotFoundException("Student with USN "+usn+" not found. Try Again"));
 	}
 	
+	
 	public StudentEnrollments getStudentDetailsById(String usn) {
-		Optional<Student> op=strepo.findById(usn);
-		if(!op.isPresent()) {
-//			error
-		}
-		Student st=op.get();
+//		Optional<Student> op=strepo.findById(usn);
+//		if(!op.isPresent()) {
+////			error
+//		}
+//		Student st=op.get();
+		Student st=getStudentById(usn);
 		List<Enrollments> en=st.getEnrollments();
 		StudentEnrollments se=new StudentEnrollments();
 		se.setUsn(st.getUsn());
@@ -62,7 +66,7 @@ public class StudentService {
 		return sten;
 	}
 	
-	//on;y student details
+	//only student details
 	public void updateStudentDetails(String usn,UpdateStudent st) {
 		Student s=getStudentById(usn);
 		s.setsName(st.getsName());
@@ -80,6 +84,7 @@ public class StudentService {
 	public void deletestudent(String usn) {
 		//delete all children referring to this field before deleting parent
 		//this is done by cascade
+		getStudentById(usn);
 		strepo.deleteById(usn);
 	}
 	

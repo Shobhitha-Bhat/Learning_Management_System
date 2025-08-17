@@ -12,6 +12,10 @@ import com.LMS.Learning_Management_System.DAO.CourseRepo;
 import com.LMS.Learning_Management_System.DAO.InstructorRepo;
 import com.LMS.Learning_Management_System.DTO.CourseResponseEntity;
 import com.LMS.Learning_Management_System.DTO.FacultyCourseList;
+import com.LMS.Learning_Management_System.Exceptions.CourseNotFoundException;
+import com.LMS.Learning_Management_System.Exceptions.InstructorNotFoundException;
+import com.LMS.Learning_Management_System.Exceptions.InvalidCourseException;
+import com.LMS.Learning_Management_System.Exceptions.InvalidInstructorException;
 import com.LMS.Learning_Management_System.entities.Course;
 import com.LMS.Learning_Management_System.entities.Instructor;
 
@@ -25,6 +29,10 @@ public class InstructorService {
 		
 		//add faculty
 		public Instructor addInstructor(Instructor ins) {
+			Optional<Instructor> op= instrepo.findById(ins.getFid());
+			if(op.isPresent()) {
+				throw new InvalidInstructorException("Instructor with ID "+ins.getFid()+" already exists. Try Again");
+			}
 			return instrepo.save(ins);
 		}
 		
@@ -32,6 +40,9 @@ public class InstructorService {
 		//get faculty by id
 		public Instructor getInsById(String fid) {
 			Optional<Instructor> op =  instrepo.findById(fid);
+			if(!op.isPresent()) {
+				throw new InstructorNotFoundException("Instructor with ID "+fid+" not found.Try Again");
+			}
 			Instructor ins=op.get();
 			return ins;
 		}
@@ -62,10 +73,16 @@ public class InstructorService {
 		//add course to be handled by the faculty
 		public void addNewCourseForInst(String fId,int cId) {
 			Optional<Course> op = crepo.findById(cId);
+			if(!op.isPresent()) {
+				throw new CourseNotFoundException("Course with ID "+cId+" not found.Try Again.");
+			}
 			Course c=op.get();
 			Instructor ins=getInsById(fId);
 			
 			List<Course> cs = ins.getCourses();
+			if(cs.contains(c)) {
+				throw new InvalidCourseException("Course already handled by the Instructor. Try Again");
+			}
 			cs.add(c);
 			ins.setCourses(cs);
 			
@@ -79,6 +96,10 @@ public class InstructorService {
 		}
 		
 		public void deleteInst(String fid) {
+			Optional<Instructor> op =  instrepo.findById(fid);
+			if(!op.isPresent()) {
+				throw new InstructorNotFoundException("Instructor with ID "+fid+" not found.Try Again");
+			}
 			//automatically deletes entry from the instructor_course join table also.
 			instrepo.deleteById(fid);
 		}

@@ -34,7 +34,6 @@ public class StudentController {
 	}
 	
 	@GetMapping("/student/{usn}")
-	//handle studentnotfound
 	public StudentEnrollments getStudentById(@PathVariable("usn") String usn) {
 		return stservice.getStudentDetailsById(usn);
 	}
@@ -46,7 +45,6 @@ public class StudentController {
 	}
 	
 	@DeleteMapping("/deleteStudent/{usn}")
-	//handle studentnotfound
 	public void deleteStudent(@PathVariable ("usn") String usn) {
 		stservice.deletestudent(usn);
 	}

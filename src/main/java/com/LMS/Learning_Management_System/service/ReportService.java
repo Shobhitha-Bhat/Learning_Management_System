@@ -16,6 +16,7 @@ import com.LMS.Learning_Management_System.DTO.InstructorReport;
 import com.LMS.Learning_Management_System.DTO.InstructorResponseEntity;
 import com.LMS.Learning_Management_System.DTO.StudentCoursesReport;
 import com.LMS.Learning_Management_System.DTO.StudentReport;
+import com.LMS.Learning_Management_System.Exceptions.CourseNotFoundException;
 import com.LMS.Learning_Management_System.entities.Course;
 import com.LMS.Learning_Management_System.entities.Enrollments;
 import com.LMS.Learning_Management_System.entities.Instructor;
@@ -41,8 +42,9 @@ public class ReportService {
 			double average=0;
 			for(Enrollments e:en) {
 				cid= e.getEnr_id().getC_id();
-				Optional<Course> op = crepo.findById(cid);
-				Course c=op.get();
+				Course c=crepo.findById(cid).orElse(null);
+				if(c==null)
+					continue;   //the course might have been removed.
 				cname=c.getC_name();
 				marks =e.getMarks();
 				average=average+marks;

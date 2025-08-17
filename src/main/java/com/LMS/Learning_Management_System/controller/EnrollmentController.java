@@ -21,7 +21,6 @@ public class EnrollmentController {
 	private EnrollmentService enservice;
 	
 	@GetMapping("/getenrollments/{c_id}")
-	//handle empty course enrollments
 	public EnrollmentList getAllEnrollments(@PathVariable ("c_id") int cId){
 		return enservice.getAllStudentsInCourse(cId);
 	}

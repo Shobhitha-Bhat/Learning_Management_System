@@ -13,6 +13,10 @@ import com.LMS.Learning_Management_System.DAO.EnrollmentRepo;
 import com.LMS.Learning_Management_System.DAO.InstructorRepo;
 import com.LMS.Learning_Management_System.DTO.CourseFacultyList;
 import com.LMS.Learning_Management_System.DTO.InstructorResponseEntity;
+import com.LMS.Learning_Management_System.Exceptions.CourseNotFoundException;
+import com.LMS.Learning_Management_System.Exceptions.InstructorNotFoundException;
+import com.LMS.Learning_Management_System.Exceptions.InvalidCourseException;
+import com.LMS.Learning_Management_System.Exceptions.InvalidInstructorException;
 import com.LMS.Learning_Management_System.entities.Course;
 import com.LMS.Learning_Management_System.entities.Instructor;
 
@@ -30,6 +34,10 @@ public class CourseService {
 	
 	//add course
 	public Course addCourse(Course c) {
+		Optional<Course> op= crepo.findById(c.getCid());
+		if(op.isPresent()) {
+			throw new InvalidCourseException("Course with ID "+c.getCid()+" already exists. Try Again");
+		}
 		return crepo.save(c);
 	}
 	
@@ -37,11 +45,12 @@ public class CourseService {
 	public Course getCourseById(int c_id) {
 	Optional<Course> op= crepo.findById(c_id);
 	if(!op.isPresent()) {
-//		error
+		throw new CourseNotFoundException("Course with ID "+c_id+" not found.Try Again.");
 	}
 	Course c= op.get();
 	return c;
 	}
+	
 	
 	//get all course with details
 	public List<CourseFacultyList> getAllCourses(){
@@ -53,6 +62,7 @@ public class CourseService {
 		return cf;
 	}
 	
+	
 	//get the course handling faculty list
 	public CourseFacultyList getInstructors(int c_id){
 		Course c = getCourseById(c_id);
@@ -63,16 +73,19 @@ public class CourseService {
 		return new CourseFacultyList(c.getCid(),c.getC_name(),list);
 	}
 	
+	
 	//add a new courseInstructor
 	public void addNewCourseInst(String fId,int c_id) {
 		Course c = getCourseById(c_id);
 		Optional<Instructor> op=irepo.findById(fId);
+		if(!op.isPresent()) {
+			throw new InstructorNotFoundException("Instructor with ID "+fId+" not found.Try Again");
+		}
 		Instructor ins=op.get();
 		
 		List<Instructor> inst = c.getInstructors();
 		inst.add(ins);
 		c.setInstructors(inst);
-		
 		List<Course> cs=ins.getCourses();
 		cs.add(c);
 		ins.setCourses(cs);

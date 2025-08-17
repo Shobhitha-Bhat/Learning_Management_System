@@ -13,6 +13,8 @@ import com.LMS.Learning_Management_System.DTO.EnrollmentList;
 import com.LMS.Learning_Management_System.DTO.EnrollmentRequest;
 import com.LMS.Learning_Management_System.DTO.StudentEnrollResponseEntity;
 import com.LMS.Learning_Management_System.DTO.UpdateEnrollment;
+import com.LMS.Learning_Management_System.Exceptions.EnrollmentNotFoundException;
+import com.LMS.Learning_Management_System.Exceptions.InvalidEnrollmentException;
 import com.LMS.Learning_Management_System.entities.Course;
 import com.LMS.Learning_Management_System.entities.EnrollmentId;
 import com.LMS.Learning_Management_System.entities.Enrollments;
@@ -30,6 +32,7 @@ public class EnrollmentService {
 	
 	//get all students enrolled in a particular course	
 	public EnrollmentList getAllStudentsInCourse(int c_id){
+		cservice.getCourseById(c_id);
 		List<Enrollments> enrolls = (List<Enrollments>) enrepo.findAllByCourse_cid(c_id);
 		List<StudentEnrollResponseEntity> st = new ArrayList<>();
 		for(Enrollments en:enrolls) {
@@ -45,7 +48,10 @@ public class EnrollmentService {
 		Course c = cservice.getCourseById(c_id);
 		
 		EnrollmentId newEnroll = new EnrollmentId(usn,c_id);
-		
+		Optional<Enrollments> en = enrepo.findById(newEnroll);
+		if(en.isPresent()) {
+			throw new InvalidEnrollmentException("Enrollment with Id already exists.Try Again");
+		}
 		Enrollments enroll = new Enrollments(newEnroll, st,c,0);
 		enrepo.save(enroll);
 		st.getEnrollments().add(enroll);
@@ -55,18 +61,28 @@ public class EnrollmentService {
 	
 
 	//add a student and their selected courses_list
+	//if the course id list contains invalid course id then that operation is not done.
+	//except in cases where that invalid course id is at the end of the list.
 	public void addStudentsandTheirCourses(EnrollmentRequest enreq) {
 		String usn=enreq.getStUSN();
 		List<Integer> course_ids = enreq.getCourseIds();
 		Student st = stservice.getStudentById(usn);
+		EnrollmentId newEnroll;
+		Course c;
 		for(Integer c_id:course_ids) {
-			
-			Course c = cservice.getCourseById(c_id);
-			
-			EnrollmentId newEnroll = new EnrollmentId(usn,c_id);
-			
-			Enrollments enroll = new Enrollments(newEnroll, st,c,0);
-			enrepo.save(enroll);
+			try {		
+				c = cservice.getCourseById(c_id);		
+				newEnroll = new EnrollmentId(usn,c_id);
+				Optional<Enrollments> en = enrepo.findById(newEnroll);
+				if(en.isPresent()) {
+					continue;	
+				}
+				Enrollments enroll = new Enrollments(newEnroll, st,c,0);
+				enrepo.save(enroll);
+			}
+			catch(InvalidEnrollmentException e) {
+				throw new InvalidEnrollmentException("Enrollment with Id already exists.Try Again");
+			}
 		}
 	}
 	
@@ -74,13 +90,15 @@ public class EnrollmentService {
 	
 	//add/update marks of a particular course and student
 	
-	public void modifyStudentMarks(UpdateEnrollment upenroll) {
+	public void modifyStudentMarks(UpdateEnrollment upenroll){
 		String Usn=upenroll.getStUsn();
 		int c_id = upenroll.getcId();
 		int marks=upenroll.getMarks();
 		EnrollmentId enroll = new EnrollmentId(Usn,c_id);
 		Optional<Enrollments> optional = enrepo.findById(enroll);
-		
+		if(!optional.isPresent()) {
+			throw new EnrollmentNotFoundException("Invalid Enrollment ID.Try Again");
+		}
 		Enrollments en=optional.get();
 		en.setMarks(marks);
 		enrepo.save(en);
@@ -90,6 +108,10 @@ public class EnrollmentService {
 	//delete a particular entry	
 	public void deleteEnrollment(String usn,int c_id) {
 		EnrollmentId e_id=new EnrollmentId(usn,c_id);
+		Optional<Enrollments> optional = enrepo.findById(e_id);
+		if(!optional.isPresent()) {
+			throw new EnrollmentNotFoundException("Invalid Enrollment ID.Try Again");
+		}
 		enrepo.deleteById(e_id);
 	}
 	
