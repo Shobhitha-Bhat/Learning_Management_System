@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-	
+
 	private ResponseEntity<ErrorResponseEntity> buildErrorResponse(Exception e, HttpStatus status){
+		System.out.println("\n"
+				+ e.getMessage());
 		ErrorResponseEntity er = new ErrorResponseEntity(
 				LocalDateTime.now(), 
 				status.value(),
