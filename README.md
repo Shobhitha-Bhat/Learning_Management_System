@@ -1,2 +1,3 @@
 ## 📄 Project Report
-Learning Management System.pdf
+[View Report (PDF)](Docs/Learning Management System (LMS).pdf)
+
